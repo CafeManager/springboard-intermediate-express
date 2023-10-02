@@ -40,10 +40,24 @@ function ensureCorrectUser(req, res, next) {
     return next({ status: 401, message: "Unauthorized" });
   }
 }
+
+/** Require admin user or raise 401 */
+
+function ensureAdmin(req, res, next) {
+  if (!req.user || req.user.username != "admin") {
+    const err = new ExpressError("Unauthorized", 401);
+    return next(err);
+  } else {
+    return next();
+  }
+}
+
+
 // end
 
 module.exports = {
   authenticateJWT,
   ensureLoggedIn,
-  ensureCorrectUser
+  ensureCorrectUser,
+  ensureAdmin
 };
